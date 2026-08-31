@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { SiteFooter } from "@/components/site-footer";
-import { USER_DISABLED_MESSAGE } from "@/lib/auth";
+import { USER_DISABLED_MESSAGE } from "@/lib/auth-messages";
 
 export default function LoginPage() {
   return (

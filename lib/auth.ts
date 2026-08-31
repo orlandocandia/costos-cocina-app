@@ -70,9 +70,6 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-/**
- * Mensaje en español para el error de usuario desactivado.
- * Se usa desde el cliente al recibir `res.error === "USER_DISABLED"`.
- */
-export const USER_DISABLED_MESSAGE =
-  "Usuario desactivado. Contactá al administrador.";
+// Mensaje de usuario desactivado re-exportado desde auth-messages.ts
+// para que los Client Components puedan importarlo sin arrastrar `db`.
+export { USER_DISABLED_MESSAGE } from "@/lib/auth-messages";
