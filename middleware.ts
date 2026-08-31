@@ -1,13 +1,31 @@
-import withAuth from "next-auth/middleware";
+import withAuth, { NextRequestWithAuth } from "next-auth/middleware";
+import { NextResponse } from "next/server";
 
 /**
- * Protege todas las rutas bajo /dashboard. Si no hay sesión válida,
- * redirige a /login (definido en authOptions.pages.signIn).
+ * Protege:
+ *  - /dashboard/*  → cualquier usuario autenticado.
+ *  - /admin/*      → solo usuarios con isAdmin === true.
+ *
+ * Si un usuario no-admin intenta entrar a /admin/*, recibe 403.
  */
-export default withAuth({
-  pages: { signIn: "/login" },
-});
+export default withAuth(
+  function middleware(req: NextRequestWithAuth) {
+    const token = req.nextauth.token;
+    const path = req.nextUrl.pathname;
+
+    if (path.startsWith("/admin") && !token?.isAdmin) {
+      // No es admin: prohibido.
+      return new NextResponse("Forbidden: se requieren permisos de administrador", {
+        status: 403,
+      });
+    }
+    return NextResponse.next();
+  },
+  {
+    pages: { signIn: "/login" },
+  },
+);
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard/:path*", "/admin/:path*"],
 };

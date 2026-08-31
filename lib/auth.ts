@@ -9,6 +9,11 @@ import { loginSchema } from "@/lib/validations/auth";
 /**
  * Configuración de NextAuth (v4) con CredentialsProvider.
  * La sesión es JWT (necesario para Credentials y para middleware).
+ *
+ * Validaciones en `authorize`:
+ *  - Email + contraseña correctos.
+ *  - `isActive === true`: si el admin desactivó al usuario, no puede entrar.
+ *  - `isAdmin` se propaga al JWT y a la sesión para proteger /admin.
  */
 export const authOptions: NextAuthOptions = {
   session: { strategy: "jwt" },
@@ -33,20 +38,41 @@ export const authOptions: NextAuthOptions = {
         const valid = await bcrypt.compare(parsed.data.password, user.passwordHash);
         if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+        // Bloquear usuarios desactivados por el administrador.
+        if (user.isActive === false) {
+          throw new Error("USER_DISABLED");
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          isAdmin: user.isAdmin,
+        };
       },
     }),
   ],
   callbacks: {
     async jwt({ token, user }) {
-      if (user) token.id = user.id;
+      if (user) {
+        token.id = user.id;
+        token.isAdmin = (user as { isAdmin?: boolean }).isAdmin ?? false;
+      }
       return token;
     },
     async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string;
+        session.user.isAdmin = (token.isAdmin as boolean) ?? false;
       }
       return session;
     },
   },
 };
+
+/**
+ * Mensaje en español para el error de usuario desactivado.
+ * Se usa desde el cliente al recibir `res.error === "USER_DISABLED"`.
+ */
+export const USER_DISABLED_MESSAGE =
+  "Usuario desactivado. Contactá al administrador.";

@@ -11,6 +11,8 @@ import {
   LogOut,
   Menu,
   ChefHat,
+  UserCircle,
+  ShieldCheck,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,21 +24,29 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-const NAV = [
-  { href: "/dashboard", label: "Resumen", icon: LayoutDashboard },
-  { href: "/dashboard/workplaces", label: "Mis Locales", icon: Store },
-  { href: "/dashboard/ingredients", label: "Mi Despensa", icon: Package },
-] as const;
+type NavItem = { href: string; label: string; icon: typeof LayoutDashboard };
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const { data: session } = useSession();
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const isAdmin = session?.user?.isAdmin === true;
+
+  const nav: NavItem[] = [
+    { href: "/dashboard", label: "Resumen", icon: LayoutDashboard },
+    { href: "/dashboard/workplaces", label: "Mis Locales", icon: Store },
+    { href: "/dashboard/ingredients", label: "Mi Despensa", icon: Package },
+    { href: "/dashboard/profile", label: "Mi Perfil", icon: UserCircle },
+    ...(isAdmin
+      ? [{ href: "/admin/users", label: "Admin · Usuarios", icon: ShieldCheck }]
+      : []),
+  ];
+
   function NavLinks({ onNavigate }: { onNavigate?: () => void }) {
     return (
       <nav className="space-y-1">
-        {NAV.map((item) => {
+        {nav.map((item) => {
           const active =
             item.href === "/dashboard"
               ? pathname === "/dashboard"

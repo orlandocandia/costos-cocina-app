@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { SiteFooter } from "@/components/site-footer";
+import { USER_DISABLED_MESSAGE } from "@/lib/auth";
 
 export default function LoginPage() {
   return (
@@ -40,11 +41,16 @@ function LoginContent() {
         password,
         redirect: false,
       });
+      // NextAuth propaga los `throw new Error(...)` del authorize como `error`.
       if (!res || res.error) {
+        const message =
+          res?.error === "USER_DISABLED"
+            ? USER_DISABLED_MESSAGE
+            : "Email o contraseña incorrectos.";
         toast({
           variant: "destructive",
           title: "Error al iniciar sesión",
-          description: "Email o contraseña incorrectos.",
+          description: message,
         });
         return;
       }
@@ -93,7 +99,15 @@ function LoginContent() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Contraseña</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Contraseña</Label>
+                  <Link
+                    href="/recovery"
+                    className="text-xs font-medium text-emerald-700 underline-offset-4 hover:underline"
+                  >
+                    ¿Olvidaste tu contraseña?
+                  </Link>
+                </div>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
@@ -121,16 +135,6 @@ function LoginContent() {
                 Ingresar
               </Button>
             </form>
-
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              ¿No tenés cuenta?{" "}
-              <Link
-                href="/register"
-                className="font-medium text-emerald-700 underline-offset-4 hover:underline"
-              >
-                Registrarme
-              </Link>
-            </p>
           </div>
         </div>
       </div>

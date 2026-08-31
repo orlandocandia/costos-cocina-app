@@ -4,6 +4,11 @@ import { sql } from "drizzle-orm";
 /**
  * Tabla de usuarios.
  * La contraseña se guarda hasheada con bcryptjs en `passwordHash`.
+ *
+ * `isActive` permite al admin desactivar usuarios sin eliminarlos.
+ * `isAdmin` marca qué usuarios pueden acceder a /admin.
+ * `resetToken` + `resetTokenExpires` soportan el flujo de recuperación
+ * de contraseña (/recovery → /reset-password).
  */
 export const users = sqliteTable("users", {
   id: text("id")
@@ -12,6 +17,10 @@ export const users = sqliteTable("users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   name: text("name"),
+  isActive: integer("is_active", { mode: "boolean" }).default(true).notNull(),
+  isAdmin: integer("is_admin", { mode: "boolean" }).default(false).notNull(),
+  resetToken: text("reset_token"),
+  resetTokenExpires: integer("reset_token_expires"),
   createdAt: integer("created_at")
     .default(sql`(unixepoch())`)
     .notNull(),
