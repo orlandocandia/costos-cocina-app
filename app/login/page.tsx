@@ -7,6 +7,7 @@ import { signIn } from "next-auth/react";
 import { ChefHat, Loader2, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { SiteFooter } from "@/components/site-footer";
@@ -108,19 +109,15 @@ function LoginContent() {
                     ¿Olvidaste tu contraseña?
                   </Link>
                 </div>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                  <Input
-                    id="password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Mínimo 6 caracteres"
-                    className="pl-9"
-                    autoComplete="current-password"
-                    required
-                  />
-                </div>
+                <PasswordInput
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Mínimo 6 caracteres"
+                  autoComplete="current-password"
+                  required
+                  leftIcon={<Lock className="h-4 w-4" />}
+                />
                 {errors.password && (
                   <p className="text-sm text-destructive">{errors.password}</p>
                 )}

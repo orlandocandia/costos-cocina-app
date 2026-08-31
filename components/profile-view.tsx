@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User as UserIcon, Lock, Loader2, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { updateProfileAction, changePasswordAction } from "@/lib/actions/profile";
@@ -138,9 +139,8 @@ export function ProfileView({ initialName, email }: Props) {
           <form onSubmit={handlePasswordSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="cur-pw">Contraseña actual</Label>
-              <Input
+              <PasswordInput
                 id="cur-pw"
-                type="password"
                 value={currentPassword}
                 onChange={(e) => setCurrentPassword(e.target.value)}
                 autoComplete="current-password"
@@ -152,9 +152,8 @@ export function ProfileView({ initialName, email }: Props) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="new-pw">Nueva contraseña</Label>
-              <Input
+              <PasswordInput
                 id="new-pw"
-                type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
                 placeholder="Mínimo 6 caracteres"
@@ -167,9 +166,8 @@ export function ProfileView({ initialName, email }: Props) {
             </div>
             <div className="space-y-2">
               <Label htmlFor="conf-pw">Repetir nueva contraseña</Label>
-              <Input
+              <PasswordInput
                 id="conf-pw"
-                type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 autoComplete="new-password"

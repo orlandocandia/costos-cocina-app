@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { ChefHat, Loader2, Lock, CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/password-input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { SiteFooter } from "@/components/site-footer";
@@ -99,19 +99,15 @@ function ResetPasswordContent() {
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">Nueva contraseña</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="newPassword"
-                      type="password"
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      placeholder="Mínimo 6 caracteres"
-                      className="pl-9"
-                      autoComplete="new-password"
-                      required
-                    />
-                  </div>
+                  <PasswordInput
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Mínimo 6 caracteres"
+                    autoComplete="new-password"
+                    required
+                    leftIcon={<Lock className="h-4 w-4" />}
+                  />
                   {errors.newPassword && (
                     <p className="text-sm text-destructive">{errors.newPassword}</p>
                   )}
@@ -119,19 +115,15 @@ function ResetPasswordContent() {
 
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Repetir contraseña</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                      id="confirmPassword"
-                      type="password"
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      placeholder="Repetí la nueva contraseña"
-                      className="pl-9"
-                      autoComplete="new-password"
-                      required
-                    />
-                  </div>
+                  <PasswordInput
+                    id="confirmPassword"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Repetí la nueva contraseña"
+                    autoComplete="new-password"
+                    required
+                    leftIcon={<Lock className="h-4 w-4" />}
+                  />
                   {errors.confirmPassword && (
                     <p className="text-sm text-destructive">{errors.confirmPassword}</p>
                   )}
